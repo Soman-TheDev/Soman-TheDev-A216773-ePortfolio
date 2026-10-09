@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Student e-Portfolio: labs, projects, reflection, skills and resources.">
+<title>e-Portfolio | [YOUR PROGRAMME]</title>
+<style>
+  :root {
+    --bg: #03060f;
+    --bg-2: #070d1f;
+    --panel: #0b1430;
+    --panel-2: #0f1b3d;
+    --line: #1b2c5c;
+    --text: #dbe7ff;
+    --muted: #8ea3cf;
+    --accent: #3da5ff;
+    --accent-2: #6a5cff;
+    --glow: 0 0 18px rgba(61,165,255,.35);
+    --radius: 14px;
+    --nav-h: 64px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 12px); }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.65;
+    color: var(--text);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(106,92,255,.18), transparent 60%),
+      radial-gradient(900px 500px at 0% 10%, rgba(61,165,255,.15), transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: -1;
+    background-image:
+      linear-gradient(rgba(61,165,255,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,165,255,.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
+  }
+  a { color: var(--accent); }
+  img { max-width: 100%; height: auto; }
+
+  .skip-link {
+    position: absolute; left: -999px; top: 8px;
+    background: var(--accent); color: #001; padding: 8px 14px; border-radius: 8px; z-index: 200;
+  }
+  .skip-link:focus { left: 8px; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    height: var(--nav-h);
+    background: rgba(3,6,15,.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 1180px; margin: 0 auto; height: 100%;
+    padding: 0 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .brand {
+    font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: .9rem;
+    color: var(--text); text-decoration: none;
+  }
+  .brand span { color: var(--accent); text-shadow: var(--glow); }
+  .nav-links { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .nav-links a {
+    display: block; padding: 8px 14px; border-radius: 999px;
+    color: var(--muted); text-decoration: none; font-size: .92rem;
+    transition: color .2s, background .2s, box-shadow .2s;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible {
+    color: #fff; background: var(--panel-2); box-shadow: var(--glow); outline: none;
+  }
+  .nav-toggle {
+    display: none; background: var(--panel); color: var(--text);
+    border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 1rem; cursor: pointer;
+  }
+
+  /* LAYOUT */
+  main { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 84px 0 24px; }
+  h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
+  h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    display: flex; align-items: center; gap: 14px;
+  }
+  h2::after {
+    content: ""; flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+  .eyebrow {
+    color: var(--accent); text-transform: uppercase; letter-spacing: .22em; font-size: .78rem;
+    text-shadow: var(--glow);
+  }
+  .section-intro { color: var(--muted); max-width: 70ch; margin-bottom: 28px; }
+
+  /* HERO */
+  header.hero {
+    padding: 96px 20px 40px; max-width: 1180px; margin: 0 auto;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    background: linear-gradient(90deg, #fff, var(--accent) 55%, var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p.lead { font-size: 1.12rem; color: var(--muted); max-width: 70ch; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 0; }
+  .chip {
+    padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px;
+    background: var(--panel); font-size: .9rem;
+  }
+  .chip b { color: var(--accent); font-weight: 600; }
+
+  /* GRIDS & CARDS */
+  .grid { display: grid; gap: 22px; }
+  .grid.cols-3 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .grid.cols-4 { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+  .card {
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: transform .25s, box-shadow .25s, border-color .25s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--glow); }
+  .card h3 { font-size: 1.12rem; }
+  .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid var(--line); padding: 3px 10px; border-radius: 999px;
+  }
+  .video-wrap {
+    position: relative; width: 100%; aspect-ratio: 16 / 9;
+    border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #000;
+  }
+  .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .reflection {
+    border-left: 3px solid var(--accent-2);
+    padding: 8px 12px; background: rgba(106,92,255,.08); border-radius: 0 8px 8px 0;
+    font-size: .92rem; color: var(--text);
+  }
+  .reflection strong { color: var(--accent); display: block; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; }
+
+  .btn {
+    display: inline-block; align-self: flex-start;
+    padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: .92rem;
+    color: #00111f; background: linear-gradient(90deg, var(--accent), #7fd0ff);
+    text-decoration: none; border: 0; cursor: pointer;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .btn:hover, .btn:focus-visible { box-shadow: var(--glow); transform: translateY(-1px); outline: none; }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+
+  /* TEAM */
+  .member .role { color: var(--accent); font-size: .88rem; }
+  .member .matric { font-family: ui-monospace, Consolas, monospace; font-size: .85rem; color: var(--muted); }
+  .avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--accent), var(--accent-2));
+    box-shadow: var(--glow);
+    display: grid; place-items: center; font-weight: 700; color: #00111f;
+  }
+
+  /* PROJECT HEADER */
+  .project-brief {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 22px; margin-bottom: 26px;
+  }
+  .project-brief h3 { color: var(--accent); }
+  .project-brief p { margin: .3em 0; color: var(--muted); }
+
+  /* SKILLS */
+  .skills { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 0; }
+  .skills li {
+    padding: 9px 18px; border-radius: 999px; font-size: .92rem;
+    background: var(--panel); border: 1px solid var(--line);
+    transition: box-shadow .2s, border-color .2s, color .2s;
+  }
+  .skills li:hover { border-color: var(--accent); box-shadow: var(--glow); color: #fff; }
+
+  .reflect-box {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px; font-size: 1.05rem;
+  }
+  .resources-list { padding-left: 20px; color: var(--muted); }
+  .resources-list li { margin-bottom: 8px; }
+  .ai-note {
+    margin-top: 18px; padding: 14px 18px; border: 1px dashed var(--accent-2);
+    border-radius: 10px; color: var(--muted); background: rgba(106,92,255,.07);
+  }
+
+  footer {
+    margin-top: 96px; border-top: 1px solid var(--line);
+    background: var(--bg-2); text-align: center; padding: 28px 20px; color: var(--muted); font-size: .92rem;
+  }
+  footer strong { color: var(--text); }
+
+  /* MOBILE */
+  @media (max-width: 760px) {
+    .nav-toggle { display: block; }
+    .nav-links {
+      position: absolute; top: var(--nav-h); left: 0; right: 0;
+      flex-direction: column; background: rgba(3,6,15,.97);
+      border-bottom: 1px solid var(--line); padding: 10px 20px 16px;
+      display: none;
+    }
+    .nav-links.open { display: flex; }
+    .grid.cols-3 { grid-template-columns: 1fr; }
+    section { padding-top: 64px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#home">Skip to content</a>
+
+<nav aria-label="Main navigation">
+  <div class="nav-inner">
+    <a class="brand" href="#home">e<span>-</span>Portfolio</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#labs">Labs</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#reflection">Reflection</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#resources">Resources</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="home">
+  <p class="eyebrow">Student e-Portfolio</p>
+  <h1>[YOUR PROGRAMME]</h1>
+  <p class="lead">[WRITE YOUR INTRO]</p>
+  <div class="meta-row">
+    <span class="chip"><b>Programme:</b> [YOUR PROGRAMME]</span>
+    <span class="chip"><b>Instructor:</b> [INSTRUCTOR NAME]</span>
+  </div>
+</header>
+
+<main>
+  <!-- TEAM -->
+  <section aria-labelledby="team-title" style="padding-top:40px">
+    <h2 id="team-title">Group Members</h2>
+    <div class="grid cols-4">
+      <article class="card member">
+        <div class="avatar" role="img" aria-label="Avatar placeholder for group member 1">1</div>
+        <h3>[YOUR NAME]</h3>
+        <span class="matric">Matric No: [YOUR MATRIC]</span>
+        <span class="role">Role: [Your Role]</span>
+        <p>[Contribution]</p>
+      </article>
+      <article class="card member">
+        <div class="avatar" role="img" aria-label="Avatar placeholder for group member 2">2</div>
+        <h3>[YOUR NAME]</h3>
+        <span class="matric">Matric No: [YOUR MATRIC]</span>
+        <span class="role">Role: [Your Role]</span>
+        <p>[Contribution]</p>
+      </article>
+      <article class="card member">
+        <div class="avatar" role="img" aria-label="Avatar placeholder for group member 3">3</div>
+        <h3>[YOUR NAME]</h3>
+        <span class="matric">Matric No: [YOUR MATRIC]</span>
+        <span class="role">Role: [Your Role]</span>
+        <p>[Contribution]</p>
+      </article>
+      <article class="card member">
+        <div class="avatar" role="img" aria-label="Avatar placeholder for group member 4">4</div>
+        <h3>[YOUR NAME]</h3>
+        <span class="matric">Matric No: [YOUR MATRIC]</span>
+        <span class="role">Role: [Your Role]</span>
+        <p>[Contribution]</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- LABS -->
+  <section id="labs" aria-labelledby="labs-title">
+    <h2 id="labs-title">Labs</h2>
+    <p class="section-intro">Hands-on lab sessions. Replace each <code>VIDEO_ID</code> with your YouTube video ID.</p>
+    <div class="grid cols-3">
+      <article class="card">
+        <span class="tag">Lab 1</span>
+        <h3>[LAB 1 TITLE]</h3>
+        <p>[Short description of Lab 1.]</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Lab 1 video demonstration" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="reflection"><strong>Reflection</strong>[2–3 sentence reflection for Lab 1.]</div>
+      </article>
+      <article class="card">
+        <span class="tag">Lab 2</span>
+        <h3>[LAB 2 TITLE]</h3>
+        <p>[Short description of Lab 2.]</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Lab 2 video demonstration" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="reflection"><strong>Reflection</strong>[2–3 sentence reflection for Lab 2.]</div>
+      </article>
+      <article class="card">
+        <span class="tag">Lab 3</span>
+        <h3>[LAB 3 TITLE]</h3>
+        <p>[Short description of Lab 3.]</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Lab 3 video demonstration" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="reflection"><strong>Reflection</strong>[2–3 sentence reflection for Lab 3.]</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" aria-labelledby="projects-title">
+    <h2 id="projects-title">Projects</h2>
+    <div class="project-brief">
+      <h3>[NAME]</h3>
+      <p><strong>Problem Statement:</strong> [1–2 SENTENCES]</p>
+      <p><strong>Vulnerability Solution:</strong> Six cases demonstrating live code vulnerability implementation, each with a video walkthrough and reflection.</p>
+    </div>
+    <div class="grid cols-3">
+      <article class="card">
+        <span class="tag">Case 1</span>
+        <h3>Login Test</h3>
+        <p>Live code vulnerability implementation for the login test case.</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Case 1 Login Test video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="reflection"><strong>Reflection</strong>[2–3 SENTENCES]</div>
+        <a class="btn" href="[LINK]" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </article>
+      <article class="card">
+        <span class="tag">Case 2</span>
+        <h3>Data 1</h3>
+        <p>Live code vulnerability implementation for the Data 1 case.</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Case 2 Data 1 video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="reflection"><strong>Reflection</strong>[2–3 SENTENCES]</div>
+        <a class="btn" href="[LINK]" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </article>
+      <article class="card">
+        <span class="tag">Case 3</span>
+        <h3>Data 2</h3>
+        <p>Live code vulnerability implementation for the Data 2 case.</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Case 3 Data 2 video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="reflection"><strong>Reflection</strong>[2–3 SENTENCES]</div>
+        <a class="btn" href="[LINK]" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </article>
+      <article class="card">
+        <span class="tag">Case 4</span>
+        <h3>SQL Injection</h3>
+        <p>Live code vulnerability implementation for the SQL injection case.</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Case 4 SQL Injection video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="reflection"><strong>Reflection</strong>[2–3 SENTENCES]</div>
+        <a class="btn" href="[LINK]" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </article>
+      <article class="card">
+        <span class="tag">Case 5</span>
+        <h3>Placeholder 1</h3>
+        <p>Live code vulnerability implementation for the Placeholder 1 case.</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Case 5 Placeholder 1 video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="reflection"><strong>Reflection</strong>[2–3 SENTENCES]</div>
+        <a class="btn" href="[LINK]" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </article>
+      <article class="card">
+        <span class="tag">Case 6</span>
+        <h3>Placeholder 2</h3>
+        <p>Live code vulnerability implementation for the Placeholder 2 case.</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="Case 6 Placeholder 2 video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="reflection"><strong>Reflection</strong>[2–3 SENTENCES]</div>
+        <a class="btn" href="[LINK]" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- REFLECTION -->
+  <section id="reflection" aria-labelledby="reflection-title">
+    <h2 id="reflection-title">Reflection &amp; Learning Journey</h2>
+    <div class="reflect-box">
+      <p>[3–4 SENTENCES]</p>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" aria-labelledby="skills-title">
+    <h2 id="skills-title">Skills &amp; Tech Stack</h2>
+    <ul class="skills" id="skillsList" aria-label="Skills and technologies">
+      <li>SQL Injection</li>
+      <li>Python</li>
+      <li>Room</li>
+      <li>Retrofit</li>
+      <li>Firebase Firestore</li>
+      <li>ML Kit</li>
+      <li>CameraX</li>
+    </ul>
+  </section>
+
+  <!-- RESOURCES -->
+  <section id="resources" aria-labelledby="resources-title">
+    <h2 id="resources-title">Resources</h2>
+    <ul class="resources-list">
+      <li>[API / LIBRARY 1]</li>
+      <li>[API / LIBRARY 2]</li>
+      <li>[API / LIBRARY 3]</li>
+    </ul>
+    <p class="ai-note"><strong>AI Assistance Acknowledgement:</strong> [Describe how AI tools assisted in this work, e.g., code generation, debugging and documentation. All outputs were reviewed and understood by the group members.]</p>
+  </section>
+</main>
+
+<footer>
+  <p><strong>[YOUR NAME]</strong> &middot; Matric No: [YOUR MATRIC] &middot; <span id="year">2025</span></p>
+</footer>
+
+<script>
+  (function () {
+    var toggle = document.getElementById('navToggle');
+    var links = document.getElementById('navLinks');
+    toggle.addEventListener('click', function () {
+      var open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open);
+    });
+    links.addEventListener('click', function (e) {
+      if (e.target.tagName === 'A') {
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.getElementById('year').textContent = new Date().getFullYear();
+  })();
+</script>
+</body>
+</html>
